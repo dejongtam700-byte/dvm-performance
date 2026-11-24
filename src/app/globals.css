@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+/* ─── DVM PERFORMANCE DESIGN TOKENS ─────────────────────────── */
+@theme {
+  --color-ink: #09090b;        /* primaire achtergrond */
+  --color-coal: #111113;       /* secundaire achtergrond */
+  --color-steel: #19191c;      /* verhoogde oppervlakken */
+  --color-line: #29292d;       /* subtiele borders */
+  --color-paper: #f4f4f5;      /* primaire tekst */
+  --color-mute: #a1a1aa;       /* secundaire tekst */
+  --color-signal: #c62828;     /* accent */
+  --color-signal-hi: #e0403f;  /* accent hover / op donker */
+
+  --font-display: var(--font-barlow), "Barlow Condensed", "Oswald", "Arial Narrow", sans-serif;
+  --font-sans: var(--font-inter), "Inter", system-ui, sans-serif;
+  --font-mono: var(--font-plex), "IBM Plex Mono", ui-monospace, monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-sans);
+    overflow-x: clip;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background: var(--color-signal);
+    color: #fff;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-signal-hi);
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* 12-koloms grid met vaste goot, ingekaderd op max 1440px */
+  .wrap {
+    width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 4vw, 3.5rem);
+  }
+  .grid-12 {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: clamp(1rem, 2vw, 1.75rem);
+  }
+
+  .display {
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 0.88;
+    letter-spacing: -0.005em;
+    text-wrap: balance;
+  }
+  .outline-text {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--color-paper);
+  }
+  .tech {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-mute);
+  }
+
+  /* Subtiele korrel voor fotografie-achtige vlakken */
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.07;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  /* Technisch millimeterraster */
+  .blueprint {
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.035) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  /* Lijntekening "intekenen" */
+  .draw-in path, .draw-in circle, .draw-in line, .draw-in ellipse {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw 1.6s var(--ease-out-expo) forwards;
+  }
+  .draw-in .late { animation-delay: 0.35s; }
+}
+
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@keyframes pulse-ring {
+  0% { transform: scale(0.6); opacity: 0.8; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+@keyframes scroll-cue {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(220%); }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(0.6em); }
+  to { opacity: 1; transform: none; }
+}
